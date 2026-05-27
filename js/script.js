@@ -58,28 +58,6 @@ const FormDataManager = {
 
 
 // ==========================================
-// SPLASH SCREEN CONTROLLER
-// ==========================================
-
-function initSplashScreen() {
-    const splash = document.getElementById('toxSplash');
-    if (!splash) return;
-    
-    // Prevent body scroll during splash
-    document.body.style.overflow = 'hidden';
-    
-    setTimeout(function() {
-        splash.classList.add('hidden');
-        document.body.style.overflow = '';
-        // Remove from DOM after transition
-        setTimeout(function() {
-            splash.remove();
-        }, 800);
-    }, 3000);
-}
-
-
-// ==========================================
 // NAVIGATION
 // ==========================================
 
@@ -970,10 +948,7 @@ function initScrollAnimations() {
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. Splash screen
-    initSplashScreen();
-
-    // 2. Navigation
+    // 1. Navigation
     initNavbar();
 
     // 3. Auto-fill forms

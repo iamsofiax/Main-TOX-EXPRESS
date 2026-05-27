@@ -1,0 +1,15 @@
+# Deploy on a NEW Render account: Dashboard → New → Blueprint → connect this repo.
+# Or: New Web Service → connect GitHub → Render reads this file automatically.
+services:
+  - type: web
+    name: tox-express
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "18"
+      # Add the rest in Render Dashboard → Environment (copy from your local .env):
+      # ADMIN_PASSWORD, EMAIL_USER, EMAIL_PASSWORD, BREVO_API_KEY,
+      # MONGODB_URI, JSONBIN_API_KEY, JSONBIN_BIN_ID, etc.

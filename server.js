@@ -8,7 +8,10 @@ const http = require('http');
 const https = require('https');
 const { MongoClient } = require('mongodb');
 const app = express();
+app.disable('x-powered-by');
 const PORT = process.env.PORT || 3000;
+
+var CUSTOMER_HTML = ['index.html', 'tracking.html', 'dashboard.html', 'terms.html', 'privacy-policy.html', 'cookie-policy.html', 'partners.html'];
 
 // ==================== EMAIL SETUP ====================
 let emailTransporter = null;
@@ -252,10 +255,19 @@ app.use(express.static(__dirname, {
     dotfiles: 'deny',
     index: ['index.html'],
     setHeaders: function(res, filePath) {
-        if (filePath.endsWith('.js') || filePath.endsWith('.css')) {
+        var base = path.basename(filePath);
+        if (CUSTOMER_HTML.indexOf(base) !== -1) {
+            res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=86400, stale-while-revalidate=604800');
+        } else if (base === 'admin.html') {
             res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
             res.setHeader('Pragma', 'no-cache');
             res.setHeader('Expires', '0');
+        } else if (filePath.endsWith('.js') || filePath.endsWith('.css')) {
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            res.setHeader('Pragma', 'no-cache');
+            res.setHeader('Expires', '0');
+        } else if (filePath.includes(path.join('data', path.sep)) && filePath.endsWith('.json')) {
+            res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300');
         }
     }
 }));

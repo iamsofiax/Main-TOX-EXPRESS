@@ -3564,12 +3564,12 @@
             if (document.getElementById('docCustomsDecl').checked) documents.push('Customs Declaration');
             if (document.getElementById('docInsuranceCert').checked) documents.push('Insurance Certificate');
 
-            if (!clientName || !clientEmail || !origin || !destination || !deliveryAddress || !weight || !eta || !length || !width || !height || !cargoDescription || !declaredValue || !pickupDate) {
+            if (!e.target.checkValidity()) {
                 toast('Please fill all required fields', 'error');
                 return;
             }
 
-        // ==================== PROFESSIONAL TRACKING ID GENERATOR ====================
+            // ==================== PROFESSIONAL TRACKING ID GENERATOR ====================
         function generateTrackingId(type, origin, destination) {
             var year = new Date().getFullYear();
             var month = String(new Date().getMonth() + 1).padStart(2, '0');
