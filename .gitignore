@@ -1,4 +1,5 @@
 node_modules/
+dist/
 data/visitors.json
 data/audit-log.json
 .env

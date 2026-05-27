@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadDashboard() {
-        fetch('/api/dashboard/stats')
+        fetch(toxApi('/api/dashboard/stats'))
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 // KPIs

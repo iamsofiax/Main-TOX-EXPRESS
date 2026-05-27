@@ -2,7 +2,7 @@
 
 // Visitor tracking for tracking page
 (function() {
-    fetch('/api/visitor/click', {
+    fetch(toxApi('/api/visitor/click'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ page: 'tracking.html', action: 'page_visit' })
@@ -34,7 +34,7 @@ async function trackShipment() {
     resultDiv.style.display = 'block';
 
     // Notify admin of tracking search (fire-and-forget)
-    fetch('/api/visitor/click', {
+    fetch(toxApi('/api/visitor/click'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ page: 'tracking.html', action: 'tracking_search', trackingId: trackingNumber })
@@ -42,7 +42,7 @@ async function trackShipment() {
 
     try {
         // Try server API first
-        var res = await fetch('/api/track/' + encodeURIComponent(trackingNumber));
+        var res = await fetch(toxApi('/api/track/' + encodeURIComponent(trackingNumber)));
         if (!res.ok) throw new Error('Server error');
         var data = await res.json();
 

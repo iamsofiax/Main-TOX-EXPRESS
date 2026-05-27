@@ -504,7 +504,7 @@ function addDemoShipmentRoutes() {
     ];
 
     // Try to fetch real active shipments from server, fall back to static JSON, then demo
-    fetch('/api/map/shipments')
+    fetch(toxApi('/api/map/shipments'))
         .then(function(res) {
             if (!res.ok) throw new Error('Server unavailable');
             return res.json();
@@ -564,7 +564,7 @@ var VisitorTracker = {
     trackPageVisit: function() {
         var self = this;
         var page = window.location.pathname.replace(/^\//, '') || 'homepage';
-        fetch('/api/visitor/click', {
+        fetch(toxApi('/api/visitor/click'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ page: page, action: 'page_visit' })
@@ -588,7 +588,7 @@ var VisitorTracker = {
         if (extra) {
             if (extra.trackingId) body.trackingId = extra.trackingId;
         }
-        fetch('/api/visitor/click', {
+        fetch(toxApi('/api/visitor/click'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
@@ -662,7 +662,7 @@ function handleTrackingSearch(event) {
         resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    fetch('/api/track/' + encodeURIComponent(trackingNumber))
+    fetch(toxApi('/api/track/' + encodeURIComponent(trackingNumber)))
         .then(function(res) {
             if (!res.ok) throw new Error('Server error');
             return res.json();

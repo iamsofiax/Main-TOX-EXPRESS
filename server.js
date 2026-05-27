@@ -13,6 +13,13 @@ const PORT = process.env.PORT || 3000;
 
 var CUSTOMER_HTML = ['index.html', 'tracking.html', 'dashboard.html', 'terms.html', 'privacy-policy.html', 'cookie-policy.html', 'partners.html'];
 
+var ALLOWED_CORS_ORIGINS = [
+    'https://toxexpress.org',
+    'https://www.toxexpress.org',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000'
+];
+
 // ==================== EMAIL SETUP ====================
 let emailTransporter = null;
 let emailReady = false;
@@ -250,6 +257,24 @@ function pingSearchEngines() {
     console.log('  🔍 Search engine pings sent for ' + SITE_URL);
 }
 
+// CORS — public site on Cloudflare Pages calls api.toxexpress.org
+app.use(function (req, res, next) {
+    var origin = req.headers.origin;
+    if (origin && ALLOWED_CORS_ORIGINS.indexOf(origin) !== -1) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-token');
+        res.setHeader('Vary', 'Origin');
+    }
+    if (req.method === 'OPTIONS') return res.sendStatus(204);
+    next();
+});
+
+app.get('/health', function (req, res) {
+    res.setHeader('Cache-Control', 'no-store');
+    res.json({ ok: true, service: 'tox-express-api' });
+});
+
 // Middleware
 app.use(express.static(__dirname, {
     dotfiles: 'deny',
@@ -263,9 +288,7 @@ app.use(express.static(__dirname, {
             res.setHeader('Pragma', 'no-cache');
             res.setHeader('Expires', '0');
         } else if (filePath.endsWith('.js') || filePath.endsWith('.css')) {
-            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-            res.setHeader('Pragma', 'no-cache');
-            res.setHeader('Expires', '0');
+            res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400');
         } else if (filePath.includes(path.join('data', path.sep)) && filePath.endsWith('.json')) {
             res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300');
         }
