@@ -3,6 +3,7 @@ Allow: /
 
 # Block admin and data from search engines
 Disallow: /admin.html
+Disallow: /dashboard.html
 Disallow: /data/
 Disallow: /node_modules/
 
@@ -10,12 +11,14 @@ Disallow: /node_modules/
 User-agent: Googlebot
 Allow: /
 Disallow: /admin.html
+Disallow: /dashboard.html
 Disallow: /data/
 
 # Bingbot-specific
 User-agent: Bingbot
 Allow: /
 Disallow: /admin.html
+Disallow: /dashboard.html
 Disallow: /data/
 
 # Sitemap location

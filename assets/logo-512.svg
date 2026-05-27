@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="TOX Express logo">
+  <rect width="512" height="512" rx="64" fill="#1D3557"/>
+  <rect x="48" y="48" width="416" height="416" rx="48" fill="none" stroke="#E8C84A" stroke-width="12"/>
+  <text x="256" y="290" text-anchor="middle" fill="#E8C84A" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="120">TOX</text>
+  <text x="256" y="360" text-anchor="middle" fill="#E63946" font-family="Arial, sans-serif" font-weight="700" font-size="36" letter-spacing="8">EXPRESS</text>
+</svg>

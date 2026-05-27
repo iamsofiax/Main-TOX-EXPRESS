@@ -196,12 +196,29 @@ const SITE_URL = 'https://toxexpress.org';
 const ALL_URLS = [
     SITE_URL + '/',
     SITE_URL + '/tracking.html',
-    SITE_URL + '/dashboard.html',
     SITE_URL + '/partners.html',
     SITE_URL + '/privacy-policy.html',
     SITE_URL + '/terms.html',
     SITE_URL + '/cookie-policy.html'
 ];
+
+function serveHtmlWithSeo(fileName, res) {
+    var filePath = path.join(__dirname, fileName);
+    var html = fs.readFileSync(filePath, 'utf8');
+    if (process.env.GOOGLE_SITE_VERIFICATION) {
+        var safeVerify = String(process.env.GOOGLE_SITE_VERIFICATION).replace(/[^a-zA-Z0-9_-]/g, '');
+        html = html.replace('<!-- GOOGLE_SITE_VERIFICATION -->',
+            '<meta name="google-site-verification" content="' + safeVerify + '">');
+    }
+    if (process.env.GA4_MEASUREMENT_ID) {
+        var gaId = String(process.env.GA4_MEASUREMENT_ID).replace(/[^a-zA-Z0-9-]/g, '');
+        html = html.replace('<!-- GOOGLE_ANALYTICS -->',
+            '<script async src="https://www.googletagmanager.com/gtag/js?id=' + gaId + '"></script>\n' +
+            '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","' + gaId + '");</script>');
+    }
+    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=86400, stale-while-revalidate=604800');
+    res.type('html').send(html);
+}
 
 // Serve IndexNow key verification file
 app.get('/' + INDEXNOW_KEY + '.txt', (req, res) => {
@@ -278,10 +295,18 @@ app.get('/health', function (req, res) {
     res.json({ ok: true, service: 'tox-express-api' });
 });
 
+app.get('/', function (req, res) {
+    serveHtmlWithSeo('index.html', res);
+});
+
+app.get('/index.html', function (req, res) {
+    serveHtmlWithSeo('index.html', res);
+});
+
 // Middleware
 app.use(express.static(__dirname, {
     dotfiles: 'deny',
-    index: ['index.html'],
+    index: false,
     setHeaders: function(res, filePath) {
         var base = path.basename(filePath);
         if (CUSTOMER_HTML.indexOf(base) !== -1) {
