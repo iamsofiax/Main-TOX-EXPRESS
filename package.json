@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "build": "npm install",
     "dev": "node server.js",
     "deploy": "./deploy.sh",
     "build:static": "node scripts/build-static.js",
@@ -27,6 +28,6 @@
     "nodemailer": "^6.9.16"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": "18.x"
   }
 }

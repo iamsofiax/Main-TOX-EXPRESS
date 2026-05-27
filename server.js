@@ -10,6 +10,7 @@ const { MongoClient } = require('mongodb');
 const app = express();
 app.disable('x-powered-by');
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 
 var CUSTOMER_HTML = ['index.html', 'tracking.html', 'dashboard.html', 'terms.html', 'privacy-policy.html', 'cookie-policy.html', 'partners.html'];
 
@@ -29,10 +30,12 @@ let emailMode = 'none'; // 'brevo-api', 'smtp', or 'none'
 const BREVO_API_KEY = process.env.BREVO_API_KEY; // Optional: xkeysib-... key for HTTP API
 const EMAIL_SENDER = process.env.EMAIL_USER || process.env.EMAIL_FROM;
 
-console.log('  [Email Config] EMAIL_USER:', process.env.EMAIL_USER ? process.env.EMAIL_USER.substring(0, 5) + '***' : 'NOT SET');
-console.log('  [Email Config] EMAIL_PASSWORD:', process.env.EMAIL_PASSWORD ? process.env.EMAIL_PASSWORD.substring(0, 8) + '***' : 'NOT SET');
-console.log('  [Email Config] BREVO_API_KEY:', process.env.BREVO_API_KEY ? process.env.BREVO_API_KEY.substring(0, 10) + '***' : 'NOT SET');
-console.log('  [Email Config] EMAIL_HOST:', process.env.EMAIL_HOST || 'NOT SET');
+if (process.env.NODE_ENV !== 'production') {
+    console.log('  [Email Config] EMAIL_USER:', process.env.EMAIL_USER ? 'set' : 'NOT SET');
+    console.log('  [Email Config] EMAIL_PASSWORD:', process.env.EMAIL_PASSWORD ? 'set' : 'NOT SET');
+    console.log('  [Email Config] BREVO_API_KEY:', process.env.BREVO_API_KEY ? 'set' : 'NOT SET');
+    console.log('  [Email Config] EMAIL_HOST:', process.env.EMAIL_HOST || 'NOT SET');
+}
 
 if (BREVO_API_KEY && EMAIL_SENDER) {
     // Brevo HTTP API (port 443) — always works, bypasses SMTP blocks
@@ -1477,7 +1480,7 @@ process.on('uncaughtException', (err) => {
 
 // START THE SERVER IMMEDIATELY — bind port first, then do async init
 // This prevents Render from killing us for not binding the port fast enough
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
     console.log(`
     ╔════════════════════════════════════════════════════════════════╗
     ║                                                                ║

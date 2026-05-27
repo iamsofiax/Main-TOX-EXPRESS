@@ -1,11 +1,15 @@
 /**
- * API routing: toxexpress.org loads pages from Cloudflare (instant).
- * Live data (tracking, map) calls api.toxexpress.org — never the old Render URL.
+ * API base URL. Default: same origin (works on Railway/Render with one service).
+ * For split hosting (Cloudflare Pages + API), add to HTML:
+ *   <meta name="tox-api-base" content="https://api.toxexpress.org">
  */
 (function (global) {
-    var host = global.location.hostname;
-    var PUBLIC_SITE = { 'toxexpress.org': 1, 'www.toxexpress.org': 1 };
-    global.TOX_API_BASE = PUBLIC_SITE[host] ? 'https://api.toxexpress.org' : '';
+    var base = '';
+    if (typeof document !== 'undefined') {
+        var meta = document.querySelector('meta[name="tox-api-base"]');
+        if (meta && meta.content) base = meta.content.replace(/\/$/, '');
+    }
+    global.TOX_API_BASE = base;
     global.toxApi = function (path) {
         if (!path) return global.TOX_API_BASE;
         if (path.indexOf('http') === 0) return path;
